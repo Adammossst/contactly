@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
 import com.adam607062300025.assesment2.model.Contact
 import com.adam607062300025.assesment2.model.Info
 

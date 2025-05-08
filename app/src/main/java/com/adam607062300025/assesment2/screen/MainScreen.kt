@@ -107,7 +107,7 @@ fun MainScreen(navController: NavHostController) {
             ) {
                 Icon(
                     imageVector = Icons.Filled.Add,
-                    contentDescription = stringResource(R.string.tambah_catatan),
+                    contentDescription = stringResource(R.string.tambah_contact),
                     tint = MaterialTheme.colorScheme.primary
                 )
             }
@@ -128,27 +128,37 @@ fun GridItem(contact: Contact, onClick: () -> Unit) {
         ),
         border = BorderStroke(1.dp, DividerDefaults.color),
     ) {
-        Text(
-            text = contact.nama,
-            maxLines = 2,
-            overflow = TextOverflow.Ellipsis,
-            fontWeight = FontWeight.Bold
-        )
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text(
+                text = contact.nama,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+                fontWeight = FontWeight.Bold
+            )
+        }
     }
 }
 
 @Composable
 fun ListItem(contact: Contact, onClick: () -> Unit) {
     Column(
-        modifier = Modifier.padding(16.dp).fillMaxWidth().clickable { onClick() },
+        modifier = Modifier.fillMaxWidth().clickable { onClick() },
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        Text(
-            text = contact.nama,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            fontWeight = FontWeight.Bold
-        )
+        Column(
+            modifier = Modifier.padding(16.dp).fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text(
+                text = contact.nama,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                fontWeight = FontWeight.Bold
+            )
+        }
     }
 }
 
