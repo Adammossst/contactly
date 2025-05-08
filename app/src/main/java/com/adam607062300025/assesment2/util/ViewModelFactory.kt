@@ -6,7 +6,7 @@ import com.adam607062300025.assesment2.database.ContactDao
 import com.adam607062300025.assesment2.screen.DetailViewModel
 import com.adam607062300025.assesment2.screen.MainViewModel
 
-class VIewModelFactory(private val dao: ContactDao) : ViewModelProvider.Factory {
+class ViewModelFactory(private val dao: ContactDao) : ViewModelProvider.Factory {
     @Suppress("unchecked_cast")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(MainViewModel::class.java)) {

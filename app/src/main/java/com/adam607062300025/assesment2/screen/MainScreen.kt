@@ -50,7 +50,7 @@ import com.adam607062300025.assesment2.navigation.Screen
 import com.adam607062300025.assesment2.navigation.SetupNavGraph
 import com.adam607062300025.assesment2.ui.theme.Assesment2Theme
 import com.adam607062300025.assesment2.util.SettingsDataStore
-import com.adam607062300025.assesment2.util.VIewModelFactory
+import com.adam607062300025.assesment2.util.ViewModelFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -134,14 +134,6 @@ fun GridItem(contact: Contact, onClick: () -> Unit) {
             overflow = TextOverflow.Ellipsis,
             fontWeight = FontWeight.Bold
         )
-        Text(
-            text = contact.nim,
-            maxLines = 4,
-            overflow = TextOverflow.Ellipsis
-        )
-        Text(
-            text = contact.kelas
-        )
     }
 }
 
@@ -157,12 +149,6 @@ fun ListItem(contact: Contact, onClick: () -> Unit) {
             overflow = TextOverflow.Ellipsis,
             fontWeight = FontWeight.Bold
         )
-        Text(
-            text = contact.nim,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis
-        )
-        Text(text = contact.kelas)
     }
 }
 
@@ -170,7 +156,7 @@ fun ListItem(contact: Contact, onClick: () -> Unit) {
 fun ScreenContent(showList: Boolean, modifier: Modifier, navController: NavHostController) {
     val context = LocalContext.current
     val db = ContactDb.getInstance(context)
-    val factory = VIewModelFactory(db.dao)
+    val factory = ViewModelFactory(db.dao, db.dao2)
     val viewModel: MainViewModel = viewModel(factory = factory)
     val data by viewModel.data.collectAsState()
 

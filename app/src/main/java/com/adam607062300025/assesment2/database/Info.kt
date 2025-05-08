@@ -8,7 +8,7 @@ import com.adam607062300025.assesment2.model.Contact
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface ContactDao {
+interface InfoDao {
 
     @Insert
     suspend fun insert(contact: Contact)
@@ -16,11 +16,8 @@ interface ContactDao {
     @Update
     suspend fun update(contact: Contact)
 
-    @Query("SELECT * FROM Contact ORDER BY nama ASC")
-    fun getContact(): Flow<List<Contact>>
-
     @Query("SELECT *  FROM Contact WHERE id = :id")
-    suspend fun getContactById(id: Long): Contact?
+    suspend fun getInfoById(id: Long): Contact?
 
     @Query("DELETE FROM Contact WHERE id = :id")
     suspend fun deleteById(id: Long)

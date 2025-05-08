@@ -8,5 +8,4 @@ data class Contact(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0L,
     val nama: String,
-    val info: Map<String, String>,
 )

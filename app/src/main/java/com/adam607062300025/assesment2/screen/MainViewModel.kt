@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 
 class MainViewModel(dao: ContactDao) : ViewModel() {
-    val data: StateFlow<List<Contact>> = dao.getMahasiswa().stateIn(
+    val data: StateFlow<List<Contact>> = dao.getContact().stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000L),
         initialValue = emptyList()

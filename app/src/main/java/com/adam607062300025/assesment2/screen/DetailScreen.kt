@@ -1,15 +1,11 @@
 package com.adam607062300025.assesment2.screen
 
 import android.widget.Toast
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.selection.selectable
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -22,7 +18,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -33,12 +28,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.tooling.preview.Preview
@@ -49,32 +41,27 @@ import androidx.navigation.compose.rememberNavController
 import com.adam607062300025.assesment2.R
 import com.adam607062300025.assesment2.database.ContactDb
 import com.adam607062300025.assesment2.ui.theme.Assesment2Theme
-import com.adam607062300025.assesment2.util.VIewModelFactory
+import com.adam607062300025.assesment2.util.ViewModelFactory
 
-const val KEY_ID_CONTACT = "idMahasiswa"
-val items = listOf("D3IF-46-01", "D3IF-46-02", "D3IF-46-03", "D3IF-46-04", "D3IF-46-05")
+const val KEY_ID_CONTACT = "idContact"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailScreen(navController: NavController, id: Long? = null) {
     val context = LocalContext.current
     val db = ContactDb.getInstance(context)
-    val factory = VIewModelFactory(db.dao)
+    val factory = ViewModelFactory(db.dao, db.dao2)
     val viewModel: DetailViewModel = viewModel(factory = factory)
 
     var nama by remember { mutableStateOf("") }
-    var nim by remember { mutableStateOf("") }
-    var kelas by remember { mutableStateOf(items[0]) }
+    var info by remember { mutableStateOf(emptyMap<String, String>()) }
     var showDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(true) {
         if (id == null) { return@LaunchedEffect }
-        val data = viewModel.getMahasiswa(id) ?: return@LaunchedEffect
+        val data = viewModel.getContact(id) ?: return@LaunchedEffect
         nama = data.nama
-        nim = data.nim
-        kelas = data.kelas
     }
-
 
     Scaffold(
         topBar = {
@@ -101,14 +88,14 @@ fun DetailScreen(navController: NavController, id: Long? = null) {
                 actions = {
                     IconButton(
                         onClick = {
-                            if (nama == "" || nim == "") {
+                            if (nama == "" || info.isEmpty()) {
                                 Toast.makeText(context, R.string.invalid, Toast.LENGTH_LONG).show()
                                 return@IconButton
                             }
                             if (id == null) {
-                                viewModel.insert(nama, nim, kelas)
+                                viewModel.insert(nama, info)
                             } else {
-                                viewModel.update(id, nama, nim, kelas)
+                                viewModel.update(id, nama, info)
                             }
                             navController.popBackStack()
                         }
@@ -143,14 +130,14 @@ fun DetailScreen(navController: NavController, id: Long? = null) {
     ) { padding ->
         FormMahasiswa(
             nama = nama,
-            onNameChange = { nama = it },
-            kelas = kelas,
-            onKelasChange = {
-                kelas = it
+            info = info,
+            onNamaChange = {
+                nama = it
+            },
+            onInfoChange = {
+                info = it
             },
             modifier = Modifier.padding(padding),
-            nim = nim,
-            onNimChange = { nim = it }
         )
 
         if (id != null && showDialog) {
@@ -200,7 +187,7 @@ fun DeleteAction(delete: () -> Unit) {
 }
 
 @Composable
-fun FormMahasiswa(nama: String, nim: String, kelas: String, onKelasChange: (String) -> Unit, onNameChange: (String) -> Unit, onNimChange: (String) -> Unit, modifier: Modifier) {
+fun FormMahasiswa(nama: String, info: Map<String, String>, onNamaChange: (String) -> Unit, onInfoChange: (Map<String, String>) -> Unit, modifier: Modifier) {
     Column(
         modifier = modifier.fillMaxSize().padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -208,7 +195,7 @@ fun FormMahasiswa(nama: String, nim: String, kelas: String, onKelasChange: (Stri
         OutlinedTextField(
             value = nama,
             onValueChange = {
-                onNameChange(it)
+                onNamaChange(it)
             },
             label = { Text(text = stringResource(R.string.nama))  },
             singleLine = true,
@@ -218,50 +205,7 @@ fun FormMahasiswa(nama: String, nim: String, kelas: String, onKelasChange: (Stri
             ),
             modifier = Modifier.fillMaxWidth()
         )
-        OutlinedTextField(
-            value = nim,
-            onValueChange = {
-                onNimChange(it)
-            },
-            label = { Text(text = stringResource(R.string.nim)) },
-            keyboardOptions = KeyboardOptions(
-                capitalization = KeyboardCapitalization.Sentences,
-            ),
-            modifier = Modifier.fillMaxWidth()
-        )
 
-        Column(
-            modifier = Modifier.fillMaxWidth().border(1.dp, Color.Gray, RoundedCornerShape(4.dp))
-        ) {
-            items.forEach { item ->
-                KelasOption(
-                    item,
-                    kelas == item,
-                    modifier = Modifier.selectable(
-                        selected = kelas == item ,
-                        onClick = { onKelasChange(item) },
-                        role = Role.RadioButton
-                    ).padding(16.dp).fillMaxWidth()
-                )
-            }
-        }
-    }
-}
-
-@Composable
-fun KelasOption(label: String, isSelected: Boolean, modifier: Modifier) {
-    Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        RadioButton(
-            selected = isSelected, onClick = null
-        )
-        Text(
-            text = label,
-            style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier.padding(start = 8.dp)
-        )
     }
 }
 
