@@ -44,8 +44,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.adam607062300025.assesment2.R
-import com.adam607062300025.assesment2.database.MahasiswaDb
-import com.adam607062300025.assesment2.model.Mahasiswa
+import com.adam607062300025.assesment2.database.ContactDb
+import com.adam607062300025.assesment2.model.Contact
 import com.adam607062300025.assesment2.navigation.Screen
 import com.adam607062300025.assesment2.navigation.SetupNavGraph
 import com.adam607062300025.assesment2.ui.theme.Assesment2Theme
@@ -118,7 +118,7 @@ fun MainScreen(navController: NavHostController) {
 }
 
 @Composable
-fun GridItem(mahasiswa: Mahasiswa, onClick: () -> Unit) {
+fun GridItem(contact: Contact, onClick: () -> Unit) {
     Card(
         modifier = Modifier.fillMaxWidth().clickable {
             onClick()
@@ -129,47 +129,47 @@ fun GridItem(mahasiswa: Mahasiswa, onClick: () -> Unit) {
         border = BorderStroke(1.dp, DividerDefaults.color),
     ) {
         Text(
-            text = mahasiswa.nama,
+            text = contact.nama,
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,
             fontWeight = FontWeight.Bold
         )
         Text(
-            text = mahasiswa.nim,
+            text = contact.nim,
             maxLines = 4,
             overflow = TextOverflow.Ellipsis
         )
         Text(
-            text = mahasiswa.kelas
+            text = contact.kelas
         )
     }
 }
 
 @Composable
-fun ListItem(mahasiswa: Mahasiswa, onClick: () -> Unit) {
+fun ListItem(contact: Contact, onClick: () -> Unit) {
     Column(
         modifier = Modifier.padding(16.dp).fillMaxWidth().clickable { onClick() },
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Text(
-            text = mahasiswa.nama,
+            text = contact.nama,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             fontWeight = FontWeight.Bold
         )
         Text(
-            text = mahasiswa.nim,
+            text = contact.nim,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
-        Text(text = mahasiswa.kelas)
+        Text(text = contact.kelas)
     }
 }
 
 @Composable
 fun ScreenContent(showList: Boolean, modifier: Modifier, navController: NavHostController) {
     val context = LocalContext.current
-    val db = MahasiswaDb.getInstance(context)
+    val db = ContactDb.getInstance(context)
     val factory = VIewModelFactory(db.dao)
     val viewModel: MainViewModel = viewModel(factory = factory)
     val data by viewModel.data.collectAsState()
@@ -191,7 +191,7 @@ fun ScreenContent(showList: Boolean, modifier: Modifier, navController: NavHostC
                 contentPadding = PaddingValues(bottom = 84.dp),
             ) {
                 items(data) {
-                    ListItem(mahasiswa = it) {
+                    ListItem(contact = it) {
                         navController.navigate(Screen.FormUbah.withId(it.id))
                     }
                     HorizontalDivider()
@@ -206,7 +206,7 @@ fun ScreenContent(showList: Boolean, modifier: Modifier, navController: NavHostC
                 contentPadding = PaddingValues(8.dp, 8.dp, 8.dp, 84.dp)
             ) {
                 items(data) {
-                    GridItem(mahasiswa = it) {
+                    GridItem(contact = it) {
                         navController.navigate(Screen.FormUbah.withId(it.id))
                     }
                 }

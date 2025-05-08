@@ -47,18 +47,18 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.adam607062300025.assesment2.R
-import com.adam607062300025.assesment2.database.MahasiswaDb
+import com.adam607062300025.assesment2.database.ContactDb
 import com.adam607062300025.assesment2.ui.theme.Assesment2Theme
 import com.adam607062300025.assesment2.util.VIewModelFactory
 
-const val KEY_ID_MAHASISWA = "idMahasiswa"
+const val KEY_ID_CONTACT = "idMahasiswa"
 val items = listOf("D3IF-46-01", "D3IF-46-02", "D3IF-46-03", "D3IF-46-04", "D3IF-46-05")
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailScreen(navController: NavController, id: Long? = null) {
     val context = LocalContext.current
-    val db = MahasiswaDb.getInstance(context)
+    val db = ContactDb.getInstance(context)
     val factory = VIewModelFactory(db.dao)
     val viewModel: DetailViewModel = viewModel(factory = factory)
 

@@ -2,26 +2,26 @@ package com.adam607062300025.assesment2.screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.adam607062300025.assesment2.database.MahasiswaDao
-import com.adam607062300025.assesment2.model.Mahasiswa
+import com.adam607062300025.assesment2.database.ContactDao
+import com.adam607062300025.assesment2.model.Contact
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class DetailViewModel(private val dao: MahasiswaDao) : ViewModel() {
+class DetailViewModel(private val dao: ContactDao) : ViewModel() {
     fun insert(nama: String, nim: String, kelas: String) {
-        val mahasiswa = Mahasiswa(
+        val contact = Contact(
             nama    = nama,
             nim     = nim,
             kelas   = kelas
         )
 
         viewModelScope.launch(Dispatchers.IO) {
-            dao.insert(mahasiswa)
+            dao.insert(contact)
         }
     }
 
     fun update(id: Long, nama: String, nim: String, kelas: String) {
-        val mahasiswa = Mahasiswa(
+        val contact = Contact(
             id      = id,
             nama    = nama,
             nim     = nim,
@@ -29,7 +29,7 @@ class DetailViewModel(private val dao: MahasiswaDao) : ViewModel() {
         )
 
         viewModelScope.launch(Dispatchers.IO) {
-            dao.update(mahasiswa)
+            dao.update(contact)
         }
     }
 
@@ -39,7 +39,7 @@ class DetailViewModel(private val dao: MahasiswaDao) : ViewModel() {
         }
     }
 
-    suspend fun getMahasiswa(id: Long): Mahasiswa? {
+    suspend fun getMahasiswa(id: Long): Contact? {
         return dao.getMahasiswaById(id)
     }
 }
